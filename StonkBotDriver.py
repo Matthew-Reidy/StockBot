@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
+import DataGetter
 
 client = commands.Bot(command_prefix = '$')
-
 
 @client.event
 async def on_ready():
@@ -10,9 +10,9 @@ async def on_ready():
 
 #DEV USE ONLY
 #=====================
-@client.command
+@client.command()
 async def latency(ctx):
-    await ctx.send('{round(client.latency * 1000)}ms')
+    await ctx.send('{round(client.latency * 1000)}')
 #=====================
 
 @client.command(aliases = ['cmdlist'])
@@ -21,11 +21,19 @@ async def legend(ctx):
 
 @client.command(aliases = ['DailyMover', 'DailyMovers'])
 async def DM(ctx):
-   await ctx.send('Test output')
+   await ctx.send(DataGetter.getDM)
 
-@client.command
-async def GetTicker(ctx):
-    await ctx.send('test output')
-    
+#retrieves ticker info
+@client.command()
+async def GetTicker(ctx, msg):
+    tick=msg
+    DataGetter.GetQuote(tick)
+
+@client.command(aliases = ['markethours'])
+async def MarketHours(ctx):
+     await ctx.send('https://www.nyse.com/markets/hours-calendars')
+
+
+#dummy discord token    
 client.run('ODU0MDcyMzQ3MzU4NjU4NTcw.YMem2w.sL01rRwKibWfQ13u0tjepcoZt3s')
 
