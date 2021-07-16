@@ -6,7 +6,7 @@ client = commands.Bot(command_prefix = '$')
 
 @client.event
 async def on_ready():
-    print('Sample output- bot active')
+    print('bot active')
 
 #DEV USE ONLY
 #=====================
