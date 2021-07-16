@@ -1,6 +1,6 @@
 import StockBot
 import requests
-
+import json
 url = "https://apidojo-yahoo-finance-v1.p.rapidapi.com/auto-complete"
 
 headers = {
@@ -9,13 +9,20 @@ headers = {
     }
 
 
-
-def getQuote(tick):
-    querystring = {"q" : tick ,"region":"US"}
-    response = requests.request("GET", url, headers=headers, params=querystring)
-    print(response.text)
+class dataget:
+      
+    def getQuote(tick):
+     
+     querystring = {"q" : tick ,"region":"US"}
+     response = requests.request("GET", url, headers=headers, params=querystring)
+     data= json.loads(response)
+     
+     for quote in data['result']:
+         print(quote['symbol', 'regularMarketPrice'])
+         
 
 def getDM():
-    DMquerystring = {"region": "US"}
-    DMresponse = requests.request("GET", url, headers=headers, params= DMquerystring)
-    print(DMresponse.text)
+  DMquerystring = {"region": "US"}
+  DMresponse = requests.request("GET", url, headers=headers, params= DMquerystring)
+  data=json.loads(DMresponse)
+
