@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import DataGetter
+import os
 
 client = commands.Bot(command_prefix = '$')
 
@@ -35,5 +36,5 @@ async def MarketHours(ctx):
 
 
 #dummy discord token    
-client.run('ODU0MDcyMzQ3MzU4NjU4NTcw.YMem2w.sL01rRwKibWfQ13u0tjepcoZt3s')
+client.run(os.environ['API_KEY'])
 
