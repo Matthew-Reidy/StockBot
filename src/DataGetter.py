@@ -1,11 +1,12 @@
-import StockBot
+
 import requests
 import json
+import os
 
 url = "https://apidojo-yahoo-finance-v1.p.rapidapi.com/auto-complete"
 
 headers = {
-    'x-rapidapi-key': "f7f1e450bcmshdc0e3e81df6d6f3p1d2703jsn265972d33553",
+    'x-rapidapi-key': os.environ['RAPID_API_KEY'],
     'x-rapidapi-host': "apidojo-yahoo-finance-v1.p.rapidapi.com"
     }
 
