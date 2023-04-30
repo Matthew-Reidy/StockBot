@@ -1,6 +1,10 @@
 import discord
 from discord.ext import commands
 import requestModule
+import os
+from dotenv import load_dotenv
+load_dotenv('./config/.env')
+
 client = commands.Bot(command_prefix='$')
 
 
@@ -10,13 +14,13 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
-    
+
 #DEV USE ONLY
 #=====================
-# @client.command()
-# async def latency(ctx):
-#     await ctx.send(client.latency)
-#     client.run()
+@client.command()
+async def latency(ctx):
+    await ctx.send(client.latency )
+
 #=====================
 
 @client.command()
@@ -30,17 +34,30 @@ async def legend(ctx):
 
 @client.command(aliases = ['DailyMover', 'DailyMovers'])
 async def DM(ctx):
-   dms = ""
-   payload = requestModule.getDMs()
+   
+   data = requestModule.dataModule.getDMs()
 
    await ctx.send( "test" )
    
 
 #retrieves ticker info
 @client.command(aliases=['getQuote', 'getquote'])
-async def GetTickerQuote(ctx, msg):
-   
-    pass
+async def GetTickerQuote(ctx, arg: str):
+    if type(arg) != str and type(arg) == int or float:
+        await ctx.send("unrecognized argument. please enter a ticker symbol")
+    else:
+        data = requestModule.dataModule.getQuote(arg)
+        await ctx.send(data)
+
+@client.command
+async def getEarningsReport(ctx, arg:str):
+    if type(arg) != str and type(arg) == int or float:
+        await ctx.send("unrecognized argument. please enter a ticker symbol")
+    else:
+        params= {
+
+        }
+        data = requestModule.dataModule.getEarningsData(params)
    
 
 @client.command(aliases = ['markethours'])
@@ -48,5 +65,5 @@ async def MarketHours(ctx):
      await ctx.send('https://www.nyse.com/markets/hours-calendars')
      
 
-client.run()
+client.run(os.getenv('DISCORD_KEY'))
 
