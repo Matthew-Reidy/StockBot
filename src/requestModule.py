@@ -36,14 +36,22 @@ class dataModule:
         return body
         #todo parse JSON 
         
-    def getEarningsData(self, arg: dict):
+    def getEarningsData(self, args: dict):
         endpoint = '/get-earnings'
-        result = request.get(self.url + endpoint, headers=self.headers)
+        result = request.get(self.url + endpoint, headers=self.headers, params=args)
 
         body = json.loads(result.text)
         return body
+        #todo parse JSON 
 
+    def getEarningsByTicker(self, args: dict):
+        endpoint = '/get-earnings'
+        result = request.get(self.url + endpoint, headers=self.headers, params=args)
 
+        body = json.loads(result.text)
+        return body
+        #todo parse JSON 
+    
     def getDifference(self, actual: float, estimate: float) -> float:
         absOfNumerator: float = math.fabs(actual - estimate)
         divDenomenator: float = (actual + estimate) / 2

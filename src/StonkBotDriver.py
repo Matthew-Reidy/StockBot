@@ -66,17 +66,16 @@ async def getGeneralEarningsReport(ctx):
 
 @client.command(aliases=["Ticker earnings"])
 #earnings report by ticker
-async def getGeneralEarningsReport(ctx, arg:str):
+async def getEarningsReportFromTicker(ctx, arg:str):
     if type(arg) != str and type(arg) == int or float:
         await ctx.send("unrecognized argument. please enter a ticker symbol")
     else:
         params= {
+            "symbol": arg,
             "region": "US",
-            "startDate": time.time() - 15778476000,
-            "endDate": time.time(),
-            "size": 10
+            "lang": "en-US"
         }
-        data = requestModule.dataModule().getEarningsData(params)
+        data = requestModule.dataModule().getEarningsByTicker(params)
         ctx.send(data)
 
 @client.command(aliases = ['markethours'])
