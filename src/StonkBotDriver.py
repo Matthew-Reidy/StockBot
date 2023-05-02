@@ -3,6 +3,7 @@ from discord.ext import commands
 import requestModule
 import os
 from dotenv import load_dotenv
+import time
 load_dotenv('./config/.env')
 
 client = commands.Bot(command_prefix='$')
@@ -35,9 +36,9 @@ async def legend(ctx):
 @client.command(aliases = ['DailyMover', 'DailyMovers'])
 async def DM(ctx):
    
-   data = requestModule.dataModule.getDMs()
+   data = requestModule.dataModule().getDMs()
 
-   await ctx.send( "test" )
+   await ctx.send(data)
    
 
 #retrieves ticker info
@@ -46,19 +47,37 @@ async def GetTickerQuote(ctx, arg: str):
     if type(arg) != str and type(arg) == int or float:
         await ctx.send("unrecognized argument. please enter a ticker symbol")
     else:
-        data = requestModule.dataModule.getQuote(arg)
+        params ={"region":"US", "symbols": arg}
+        data = requestModule.dataModule().getQuote(params)
+
         await ctx.send(data)
 
-@client.command
-async def getEarningsReport(ctx, arg:str):
+@client.command(aliases = ["earnings"])
+#gets general earnings from the previous 6 months
+async def getGeneralEarningsReport(ctx):
+        params= {
+            "region": "US",
+            "startDate": time.time() - 15778476000,
+            "endDate": time.time(),
+            "size": 10
+        }
+        data = requestModule.dataModule().getEarningsData(params)
+        ctx.send(data)
+
+@client.command(aliases=["Ticker earnings"])
+#earnings report by ticker
+async def getGeneralEarningsReport(ctx, arg:str):
     if type(arg) != str and type(arg) == int or float:
         await ctx.send("unrecognized argument. please enter a ticker symbol")
     else:
         params= {
-
+            "region": "US",
+            "startDate": time.time() - 15778476000,
+            "endDate": time.time(),
+            "size": 10
         }
-        data = requestModule.dataModule.getEarningsData(params)
-   
+        data = requestModule.dataModule().getEarningsData(params)
+        ctx.send(data)
 
 @client.command(aliases = ['markethours'])
 async def MarketHours(ctx):

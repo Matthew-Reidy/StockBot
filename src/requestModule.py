@@ -2,7 +2,7 @@ import requests as request
 import json
 import os
 from dotenv import load_dotenv
-
+import math
 load_dotenv('./config/.env')
 
 class dataModule:
@@ -18,27 +18,37 @@ class dataModule:
 
         bodylist = body["finance"]["result"]
         
-        dailymovers: list[str] = []
+        dailymovers: str = ""
         for elements in range(len(bodylist)):
-            dailymovers.append(bodylist[elements]["title"])
+            #dailymovers.append(bodylist[elements]["title"])
+            dailymovers += bodylist[elements]["title"] + "\n"
             quotelist = bodylist[elements]["quotes"]
             for i in range(len(quotelist)):
-                dailymovers.append(quotelist[i]["symbol"])
+                #dailymovers.append(quotelist[i]["symbol"])
+                dailymovers += "\t" + quotelist[i]["symbol"] + "\n" 
         return dailymovers
-        #todo build a returnable string
 
-    def getQuote(self, ticker: str) -> str:
+    def getQuote(self, param: str) -> str:
         endpoint = '/get-quotes'
-        params: dict[str,str] = {
-                "symbols": ticker, 
-                "region": "US"
-                }
-        result = request.get(self.url+endpoint,headers=self.headers, params=params)
+
+        result = request.get(self.url+endpoint,headers=self.headers, params=param)
         body= json.loads(result.text)
-        print(body)
+        return body
         #todo parse JSON 
         
     def getEarningsData(self, arg: dict):
-        pass
+        endpoint = '/get-earnings'
+        result = request.get(self.url + endpoint, headers=self.headers)
+
+        body = json.loads(result.text)
+        return body
+
+
+    def getDifference(self, actual: float, estimate: float) -> float:
+        absOfNumerator: float = math.fabs(actual - estimate)
+        divDenomenator: float = (actual + estimate) / 2
+
+        diff =  (absOfNumerator / divDenomenator) * 100
+        return diff
    
- 
+  
