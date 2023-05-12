@@ -56,7 +56,6 @@ class dataModule:
         absOfNumerator: float = math.fabs(actual - estimate)
         divDenomenator: float = (actual + estimate) / 2
 
-        diff =  (absOfNumerator / divDenomenator) * 100
+        diff: float =  (absOfNumerator / divDenomenator) * 100
         return diff
-   
   

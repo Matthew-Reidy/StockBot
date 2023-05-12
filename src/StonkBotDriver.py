@@ -61,8 +61,8 @@ async def getGeneralEarningsReport(ctx):
             "endDate": time.time(),
             "size": 10
         }
-        data = requestModule.dataModule().getEarningsData(params)
-        ctx.send(data)
+       #data = requestModule.dataModule().getEarningsData(params)
+        ctx.send(params)
 
 @client.command(aliases=["Ticker earnings"])
 #earnings report by ticker
