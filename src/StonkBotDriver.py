@@ -4,9 +4,12 @@ import requestModule
 import os
 from dotenv import load_dotenv
 import time
+
 load_dotenv('./config/.env')
 
-client = commands.Bot(command_prefix='$')
+intents = discord.Intents.default()
+intents.message_content = True
+client = commands.Bot(command_prefix='$', intents=intents)
 
 
 @client.event
@@ -18,9 +21,9 @@ async def on_ready():
 
 #DEV USE ONLY
 #=====================
-@client.command()
-async def latency(ctx):
-    await ctx.send(client.latency )
+# @client.command()
+# async def latency(ctx):
+#     await ctx.send(client.latency )
 
 #=====================
 
@@ -44,39 +47,36 @@ async def DM(ctx):
 #retrieves ticker info
 @client.command(aliases=['getQuote', 'getquote'])
 async def GetTickerQuote(ctx, arg: str):
-    if type(arg) != str and type(arg) == int or float:
-        await ctx.send("unrecognized argument. please enter a ticker symbol")
-    else:
-        params ={"region":"US", "symbols": arg}
+
+        params ={"region":"US", "symbol": arg}
         data = requestModule.dataModule().getQuote(params)
 
         await ctx.send(data)
 
 @client.command(aliases = ["earnings"])
 #gets general earnings from the previous 6 months
-async def getGeneralEarningsReport(ctx):
-        params= {
-            "region": "US",
-            "startDate": time.time() - 15778476000,
-            "endDate": time.time(),
-            "size": 10
-        }
-       #data = requestModule.dataModule().getEarningsData(params)
-        ctx.send(params)
+async def getGeneralEarningsReport(ctx, ticker):
+    if ticker != None:
 
-@client.command(aliases=["Ticker earnings"])
-#earnings report by ticker
-async def getEarningsReportFromTicker(ctx, arg:str):
-    if type(arg) != str and type(arg) == int or float:
-        await ctx.send("unrecognized argument. please enter a ticker symbol")
-    else:
         params= {
-            "symbol": arg,
+            "endpoint": "stock/v2/",
+            "symbol": ticker,
             "region": "US",
             "lang": "en-US"
         }
-        data = requestModule.dataModule().getEarningsByTicker(params)
+        data = requestModule.dataModule().getEarningsData(params)
         ctx.send(data)
+        
+    params= {
+        "region": "US",
+        "startDate": time.time() - 15778476000,
+        "endDate": time.time(),
+        "size": 10
+    }
+    data = requestModule.dataModule().getEarningsData(params)
+    ctx.send(params)
+    
+
 
 @client.command(aliases = ['markethours'])
 async def MarketHours(ctx):
