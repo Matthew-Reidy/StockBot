@@ -10,7 +10,7 @@ class dataModule:
         self.headers = {'x-rapidapi-key': os.getenv('RAPID_API_KEY'),'x-rapidapi-host': os.getenv('RAPID_API_HOST')}
         self.url= "https://apidojo-yahoo-finance-v1.p.rapidapi.com/"
 
-    def getDMs(self):
+    def getDMs(self) -> str:
         endpoint = 'market/v2/get-movers'
         result = request.get(self.url + endpoint, headers=self.headers)
 
@@ -27,11 +27,11 @@ class dataModule:
         return dailymovers
        
 
-    def getQuote(self, param):
+    def getQuote(self, param) -> str :
         endpoint = 'stock/v2/get-summary'
         summary: str = ""
         result = request.get(self.url+endpoint,headers=self.headers, params=param)
-        print(result.status_code)
+        
         body = json.loads(result.text)
         
         summary +=f'{param["symbol"]}\n{body["summaryProfile"]["city"]}, {body["summaryProfile"]["country"]} \n\n Price - ${body["price"]["regularMarketOpen"]["fmt"]}\n'
@@ -52,37 +52,59 @@ class dataModule:
            
             for quarterlyProfits in range(len(profitsqrtrly)):
                 if profitsyrly[yearlyProfits]["date"] == int(profitsqrtrly[quarterlyProfits]["date"][2:5]):
-                    summary += f'\n\t earning{profitsqrtrly[quarterlyProfits]["earnings"]["fmt"]}, actual-{profitsqrtrly[quarterlyProfits]["revenue"]["fmt"]}'
-            summary+="No quarterly data available for this year"
+                    summary += f'\n\t earning{profitsqrtrly[quarterlyProfits]["earnings"]["fmt"]}, actual-{profitsqrtrly[quarterlyProfits]["revenue"]["fmt"]}\n'
+            summary+="No quarterly data available for this year\n"
             
 
         return summary
        
-    def marketSnapShot(self):
+    def marketSnapShot(self) -> str:
         endpoint = 'market/v2/get-summary'
         summary: str = ""
         result = request.get(self.url+endpoint,headers=self.headers)
         body = json.loads(result.text)
 
-        filtered = body["marketSummaryAndSparkResponse"]["result"][0]
+        filtered = body["marketSummaryAndSparkResponse"]["result"]
+        for data in range(len(filtered)):
+            #exclude Futures, Currency, or Crypto markets 
+            if filtered[data]["quoteType"] == "FUTURE" or filtered[data]["quoteType"] == "CURRENCY" or filtered[data]["quoteType"] == "CRYPTOCURRENCY":
+                continue
+            summary += f'{filtered[data]["fullExchangeName"]} - {filtered[data]["regularMarketTime"]["fmt"]}'
 
-            
-        print(filtered)
-
-    def getEarningsData(self, param: dict):
+            #todo calculate median and mean of price at market close
         
-        endpoint = f'{param["enpoint"]}/get-earnings'
-        result = request.get(self.url + endpoint, headers=self.headers, params=param)
+        
+        return summary
+
+    def getEarningsData(self, param: dict) -> str:
+        summary: str = ""
+        if param["endpoint"] == "stock/v2/" :
+            
+            summary: str = ""
+            result = request.get(self.url + param["endpoint"], headers=self.headers, params=param)
+            body = json.loads(result.text)
+            
+            for data in range(len(body)):
+                pass
+            return summary
+            
+        
+        result = request.get(self.url + param["endpoint"], headers=self.headers, params=param)
 
         body = json.loads(result.text)
-        return body
-        #todo parse JSON 
+        for data in range(len(body)):
+            pass
+        return summary
+       
+    def calculateMean(numberSet: list) -> int:
+        res = numberSet[0]
+        for i in range(1, len(numberSet)):
+            res += numberSet[i]
+        return res / len(numberSet)
+    
+    def calculateMedian(numberSet: list) -> int:
+        if len(numberSet) % 2 != 0:
+            pass
+        else:
+            pass
 
-
-  
-# params ={"region":"US", "symbol": "AMRN"}
-# data = dataModule().getQuote(params)
-
-# # dataModule().getDMs()
-
-# print(dataModule().getDifference(actual=-0.18, estimate=-0.06))

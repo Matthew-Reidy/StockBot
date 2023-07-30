@@ -55,26 +55,29 @@ async def GetTickerQuote(ctx, arg: str):
 
 @client.command(aliases = ["earnings"])
 #gets general earnings from the previous 6 months
-async def getGeneralEarningsReport(ctx, ticker):
+async def getGeneralEarningsReport(ctx, ticker= None):
     if ticker != None:
-
+        
         params= {
-            "endpoint": "stock/v2/",
+            "endpoint": "stock/v2/get-earnings",
             "symbol": ticker,
             "region": "US",
             "lang": "en-US"
         }
         data = requestModule.dataModule().getEarningsData(params)
-        ctx.send(data)
+        await ctx.send(data)
+    else:
         
-    params= {
-        "region": "US",
-        "startDate": time.time() - 15778476000,
-        "endDate": time.time(),
-        "size": 10
-    }
-    data = requestModule.dataModule().getEarningsData(params)
-    ctx.send(params)
+        params= {
+            "endpoint": "market/v2/get-earnings",
+            "region": "US",
+            "startDate": time.time() - 15778476000,
+            "endDate": time.time(),
+            "size": 10
+        }
+        data = requestModule.dataModule().getEarningsData(params)
+        await ctx.send(data)
+    
     
 
 
