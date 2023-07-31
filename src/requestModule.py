@@ -69,8 +69,8 @@ class dataModule:
             #exclude Futures, Currency, or Crypto markets 
             if filtered[data]["quoteType"] == "FUTURE" or filtered[data]["quoteType"] == "CURRENCY" or filtered[data]["quoteType"] == "CRYPTOCURRENCY":
                 continue
-            summary += f'{filtered[data]["fullExchangeName"]} - {filtered[data]["regularMarketTime"]["fmt"]}'
-
+            summary += f'{filtered[data]["shortName"]} - {filtered[data]["regularMarketTime"]["fmt"]}\n'
+            summary += f'previous close- {filtered[data]["regularMarketPreviousClose"]["fmt"]}\naverage close- {self.calculateMean(numberSet=filtered[data]["spark"]["close"])} \nmedian close-  \n'
             #todo calculate median and mean of price at market close
         
         
@@ -78,7 +78,7 @@ class dataModule:
 
     def getEarningsData(self, param: dict) -> str:
         summary: str = ""
-        if param["endpoint"] == "stock/v2/" :
+        if param["endpoint"] == "stock/v2/get-earnings" :
             
             summary: str = ""
             result = request.get(self.url + param["endpoint"], headers=self.headers, params=param)
@@ -96,15 +96,19 @@ class dataModule:
             pass
         return summary
        
-    def calculateMean(numberSet: list) -> int:
-        res = numberSet[0]
-        for i in range(1, len(numberSet)):
-            res += numberSet[i]
-        return res / len(numberSet)
-    
-    def calculateMedian(numberSet: list) -> int:
-        if len(numberSet) % 2 != 0:
-            pass
-        else:
-            pass
+    def calculateMean(self, numberSet) -> int:
+        if numberSet != None:
+            sumOfSet = sum(numberSet)
+            return sumOfSet / len(numberSet)
+        return "N/A"
+            
+    def calculateMedian(self, numberSet) -> int:
+        number = 0
+        if numberSet != None:
+            if len(numberSet) % 2 != 0:
+                pass
+            else:
+                pass
+                
+        return number
 

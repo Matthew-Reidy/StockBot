@@ -79,11 +79,14 @@ async def getGeneralEarningsReport(ctx, ticker= None):
         await ctx.send(data)
     
     
-
+@client.command(aliases = ["snapshot"])
+async def marketSnapshot(ctx):
+    data = requestModule.dataModule().marketSnapShot()
+    await ctx.send(data)
 
 @client.command(aliases = ['markethours'])
 async def MarketHours(ctx):
-     await ctx.send('https://www.nyse.com/markets/hours-calendars')
+     await ctx.send('[New York](https://www.nyse.com/markets/hours-calendars)\n[London/Europe](https://www.londonstockexchange.com/equities-trading/business-days)\n[Japan/Asia](https://www.jpx.co.jp/english/corporate/about-jpx/calendar/index.html)')
      
 
 client.run(os.getenv('DISCORD_KEY'))
