@@ -106,9 +106,9 @@ class dataModule:
         number = 0
         if numberSet != None:
             if len(numberSet) % 2 != 0:
-                pass
+                number = numberSet[len(numberSet)/2] + numberSet[(len(numberSet)/2) - 1] 
             else:
-                pass
+                number += numberSet[len(numberSet)/2]
                 
         return number
 
