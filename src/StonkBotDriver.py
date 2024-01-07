@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import requestModule
+from requestModule import dataModule
 import os
 from dotenv import load_dotenv
 import time
@@ -39,7 +39,7 @@ async def legend(ctx):
 @client.command(aliases = ['DailyMover', 'DailyMovers'])
 async def DM(ctx):
    
-   data = requestModule.dataModule().getDMs()
+   data = dataModule().getDMs()
 
    await ctx.send(data)
    
@@ -49,7 +49,7 @@ async def DM(ctx):
 async def GetTickerQuote(ctx, arg: str):
 
         params ={"region":"US", "symbol": arg}
-        data = requestModule.dataModule().getQuote(params)
+        data = dataModule().getQuote(params)
 
         await ctx.send(data)
 
@@ -64,7 +64,7 @@ async def getGeneralEarningsReport(ctx, ticker= None):
             "region": "US",
             "lang": "en-US"
         }
-        data = requestModule.dataModule().getEarningsData(params)
+        data = dataModule().getEarningsData(params)
         await ctx.send(data)
     else:
         
@@ -75,13 +75,13 @@ async def getGeneralEarningsReport(ctx, ticker= None):
             "endDate": time.time(),
             "size": 10
         }
-        data = requestModule.dataModule().getEarningsData(params)
+        data = dataModule().getEarningsData(params)
         await ctx.send(data)
     
     
 @client.command(aliases = ["snapshot"])
 async def marketSnapshot(ctx):
-    data = requestModule.dataModule().marketSnapShot()
+    data = dataModule().marketSnapShot()
     await ctx.send(data)
 
 @client.command(aliases = ['markethours'])

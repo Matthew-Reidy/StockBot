@@ -70,7 +70,7 @@ class dataModule:
             if filtered[data]["quoteType"] == "FUTURE" or filtered[data]["quoteType"] == "CURRENCY" or filtered[data]["quoteType"] == "CRYPTOCURRENCY":
                 continue
             summary += f'{filtered[data]["shortName"]} - {filtered[data]["regularMarketTime"]["fmt"]}\n'
-            summary += f'previous close- {filtered[data]["regularMarketPreviousClose"]["fmt"]}\naverage close- {self.calculateMean(numberSet=filtered[data]["spark"]["close"])} \nmedian close-  \n'
+            summary += f'previous close- {filtered[data]["regularMarketPreviousClose"]["fmt"]}\naverage close- {self.calculateMean(numberSet=filtered[data]["spark"]["close"])} \nmedian close-  \n\n'
             #todo calculate median and mean of price at market close
         
         
